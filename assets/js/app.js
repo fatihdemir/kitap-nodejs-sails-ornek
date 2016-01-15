@@ -1,16 +1,21 @@
+// tasks adlı Room için kullandığımız WebSocket bağlantısını üye yapıyoruz. Bu sayede bu Room için tetiklenen tüm olaylardan socket bağlantımız haberdar edilebilecek
+
 io.socket.get('/task/subscribeToTaskRoom?roomName=tasks', function(msg) {
 	console.log(msg);
 });
 
+// task modeli oluşturulması durumunda bilgilendirme alıyoruz. Bilgi geldiği zaman sayfamızdaki tabloyu yeniliyoruz
 io.socket.on('task', function(event) {
 	listTasks();
 });
 
+// mevcut task nesnelerindeki değişiklikleri takip ediyoruz. Değişiklik olduğu durumda tablomuzu yeniliyoruz.
 io.socket.get('/task', function(event) {
 	listTasks();
 });
 
-//create todo
+// Yeni bir görev yazılarak enter tuşuna basıldığında tetiklenen olayı düzenliyoruz. Burada e.which == 13 koşulu basılan tuşun Enter tuşu olup olmadığını kontrol ediyor.
+// Eğer koşullar sağlanıyorsa socket bağlantımız üzerinden sails.js'nin sağladığı api rotalarını kullanarak yeni bir task nesnesi yaratılmasını sağlıyoruz. Bu yeni görevi tabloya ekliyoruz.
 $('.add-todo').on('keypress',function (e) {
       e.preventDefault
       if (e.which == 13) {
@@ -26,7 +31,7 @@ $('.add-todo').on('keypress',function (e) {
 	}
 });
 
-//delete done task from "already done"
+// tablodaki nesleri silmek için düğmeye basıldığında yine sails.js api rotalarını kullanarak veritabanından silinmesini sağlıyoruz. Sonra tablodan kaldırıyoruz.
 $('.todolist').on('click','.remove-item',function(){
 	task = $(this);
     io.socket.get('/task/destroy/'+$(task).parent().attr('task_id'), function (response) {
@@ -35,12 +40,13 @@ $('.todolist').on('click','.remove-item',function(){
 	});
 });
 
-// count tasks
+// listede bulunan görevleri sayıyoruz.
 function countTasks(){
     var count = $("#sortable li").length;
     $('.count-todos').html(count);
 }
 
+// veritabanında bulunan açık görevleri listelemek için sails.js api rotalarını kullanıyoruz.
 function listTasks() {
 	$('#sortable').html('');
 	io.socket.get('/task', function (tasks) {
