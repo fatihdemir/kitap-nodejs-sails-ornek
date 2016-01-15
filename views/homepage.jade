@@ -1,0 +1,24 @@
+extends layout
+
+block body
+  nav.navbar.navbar-inverse.navbar-fixed-top
+    div.container
+      div.navbar-header
+        a.navbar-brand(href="#") Yapılacaklar | Sails.js Uygulaması
+  div.container
+    div.row
+      div.col-md-6
+        div.todolist.not-done
+          h1 Yapılacaklar
+          input.form-control.add-todo(type="text" placeholder="Yeni görev ekle")
+              
+          hr
+          ul.list-unstyled(id="sortable")
+
+          div.todo-footer
+            strong
+              span.count-todos
+              |  görev kaldı
+
+      
+

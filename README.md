@@ -1,1 +1,3 @@
-# Bölüm 10: Sails.js Örnek Uygulama
+# testSails
+
+a [Sails](http://sailsjs.org) application
